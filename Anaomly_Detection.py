@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import math
 import sys
+from sklearn.metrics import f1_score
 
 class anomaly_detection:
     
@@ -64,7 +65,7 @@ class anomaly_detection:
         ##
         #Obtains the best epsilon when the F1 score is maxamised.
         ##
-        from sklearn.metrics import f1_score
+        
         
         bestF1 = 0
         bestEpsilon = 0
