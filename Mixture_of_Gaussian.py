@@ -1,9 +1,5 @@
 import scipy.io
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib
-#import math
-import pandas as pd
 from scipy.stats import multivariate_normal
 
 class MoG:
