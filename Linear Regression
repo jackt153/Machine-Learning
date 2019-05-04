@@ -1,0 +1,135 @@
+import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sn
+import numpy as np
+
+
+Path = """C:\\Users\\Jack\\OneDrive\\Uni Work\\Machine Learning\\Assignment1-2017\part1\\linear-regression\\ex1data1.txt"""
+Path_2 = """C:\\Users\\Jack\\OneDrive\\Uni Work\\Machine Learning\\Assignment1-2017\part1\\linear-regression\\ex1data2.txt"""
+
+
+#Calculate hypothesis
+def Hypothesis(X, theta):
+    return (np.dot(X,theta))
+
+#Plots graph with regression line
+def Plot_Graph_With_Regression_Line(X,y,X_matrix,theta):
+    plt.figure(1, figsize=(15,12))
+    plt.scatter(X, y)
+    plt.xlabel('Feature')
+    plt.ylabel('Target Variable')
+    plt.xlim(3,25)
+    plt.plot(X_matrix[:,1],Hypothesis(X_matrix,theta))
+    plt.show()
+
+#Cost function
+def CostFunction(theta, X, y):
+    m = len(y)
+    J = 0
+    J = (1/(2*m)) * np.dot((Hypothesis(X, theta)-y).transpose(),(Hypothesis(X, theta)-y))
+    return(J)
+
+#Gradient Function
+def Gradient(theta, X, y):
+    grad = np.dot((X.transpose()), Hypothesis(X,theta)-y )
+    return (grad)
+
+#Normalisation Function
+def Normalisation(X):
+    X_mean = X.mean(axis=0)
+    X_std = X.std(axis=0)
+    X_norm = (X - X_mean)/X_std
+    return(X_norm, X_mean, X_std)
+
+df = pd.read_csv(Path, header=None)
+df = pd.read_csv(Path_2, header=None)
+
+
+df.head(5)
+
+X = df.iloc[:,0:2]
+y = df[2]
+
+X.head(5)
+y.head(5)
+
+#See what the data looks like
+plt.figure(1, figsize=(15,12))
+plt.scatter(X, y)
+plt.xlabel('Feature')
+plt.ylabel('Target Variable')
+plt.show()
+
+#Plot_Graph_With_Regression_Line(X,y,X_matrix,theta)
+
+X_norm, X_mean, X_std = Normalisation(X=X)
+X_norm
+#Changes dataframe to np arrays
+X_matrix = X_norm.values
+#X_matrix = X_matrix[:,np.newaxis]
+y_vector = y[:,np.newaxis]
+
+print(X_matrix.shape)
+print(y_vector.shape)
+
+#adds ones to the X_matrix
+ones = np.ones((len(y_vector),1))
+X_matrix = np.hstack((ones,X_matrix))
+X_matrix.shape
+
+#Intialises theta to zero
+theta = np.zeros([X_matrix.shape[1],1])
+print(theta.shape)
+
+#What is the initial cost for theta = 0,0
+J = CostFunction(X=X_matrix, y=y_vector, theta=theta)
+print("Initial Cost:", J)
+
+
+
+#iterations for gradient decent
+iterations = 50
+#learning rate
+alpha = 0.1
+theta = np.zeros([X_matrix.shape[1],1])
+
+Gradient(X=X_matrix, y=y_vector, theta=theta)
+
+J_history = []
+m = len(y)
+for _ in range(iterations):
+    theta = theta -(alpha/m)* Gradient(X=X_matrix, y=y_vector, theta=theta)
+
+    J_history.append(CostFunction(X=X_matrix, y=y_vector, theta=theta))
+
+#converts array to dataframe so can be easily plotted.
+df_J_history = pd.DataFrame.from_records(J_history)
+
+plt.plot(df_J_history)
+plt.title("Cost for alpha 0.1")
+plt.xlabel("Iterations")
+plt.ylabel("Cost")
+plt.show()
+
+print(theta)
+Plot_Graph_With_Regression_Line(X,y,X_matrix,theta)
+
+## Making a Prediction
+Prediction = np.array([1650, 3,3000,4])
+Prediction = Prediction.reshape([2,2])
+Prediction
+Prediction = pd.DataFrame(data=Prediction)
+
+Pred = (Prediction - X_mean)/X_std
+Pred
+
+#Changes dataframe to np arrays
+Pred = Pred.values
+
+#adds ones to the Prediction matrix
+ones = np.ones([Pred.shape[1],1])
+Pred = np.hstack((ones,Pred))
+Pred.shape
+
+Hypothesis(X = Pred, theta=theta)
