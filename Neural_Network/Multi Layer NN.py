@@ -57,14 +57,14 @@ X_train, X_test, y_train, y_test = train_test_split(X_norm, y_, test_size=0.20, 
 
 #We want to select the number of layers and the nodes in each layer. First layer is number of pixels
 # last layer is 10 for number of labels
-layers = [X_train.shape[1],100, 100 ,10]       
+layers = [X_train.shape[1],100, 512, 256, 128  ,10]       
 
 Neural_N   = NN(X = X_train,
                 y = y_train,
                 layers = layers,
                 alpha = 0.1,
                 batch_size = 256,
-                n_epochs = 40)
+                n_epochs = 20)
 
 Cost_Train = Neural_N.Fit()
 
