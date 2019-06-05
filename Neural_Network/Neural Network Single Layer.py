@@ -6,11 +6,11 @@ Created on Mon Jun  3 19:37:44 2019
 """
 
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.model_selection import train_test_split
 import seaborn as sn
+
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 
@@ -112,7 +112,7 @@ def Back_Prop(cache, Y_actual, m):
     
     return(cache)
 
-def Grad_Decent(cache, W_dict, alpha):
+def Grad_Descent(cache, W_dict, alpha):
     
     for i in range(1,3):
         W_dict.update({"W_"+str(i): W_dict.get("W_"+str(i)) - np.multiply(alpha, cache.get("dW_"+str(i)))}) 
@@ -167,7 +167,7 @@ for epoch in range(n_epochs):
             
             cache = Back_Prop(cache, batch_Y.T, batch_size)
             
-            W_dict = Grad_Decent(cache, W_dict, alpha)
+            W_dict = Grad_Descent(cache, W_dict, alpha)
             
         print("Cost at epoch" +str(epoch)+ " Cost:"+str(np.mean(Cost_Tr_List)))
         Cost_Overall.append(np.mean(Cost_Tr_List))
@@ -178,7 +178,7 @@ plt.figure(figsize=(7,5))
 plt.plot(Cost_Overall)
 plt.xlabel("Epoch")
 plt.ylabel("Cost")
-plt.title("Cost of Trainning Dataset by Epoch")
+#plt.title("")
 plt.show()
         
 
@@ -227,8 +227,10 @@ ax[0].set_yticks([])
 ax[0].set_xticks([])
 ax[0].set_title(Y_pred[r_int],size=20)
 
-ax[1].barh(np.linspace(0,9,10), cache.get("A_2")[:,r_int].reshape(-1))
+ax[1].barh(np.linspace(0,9,10).astype(str), cache.get("A_2")[:,r_int].reshape(-1))
 ax[1].set_xlim(0,1)
+ax[1].set_title("Distribution of the Predicted Labels")
+ax[1].set_xlabel("Probability")
 
 
 
